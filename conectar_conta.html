@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-br">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Conectar Conta - Menu EasyAI</title>
+  <link rel="shortcut icon" href="icon-hamburguer.ico" type="image/x-icon">
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#ec5b13",
+            "background-light": "#f8f6f6",
+            "background-dark": "#221610",
+          },
+          fontFamily: {
+            "display": ["Public Sans"]
+          },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .active-nav {
+      background-color: #ec5b13;
+      color: white !important;
+    }
+  </style>
+</head>
+
+<body
+  class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased overflow-x-hidden">
+  <div class="flex h-screen overflow-hidden">
+    <aside
+      class="w-64 flex-shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col">
+      <div class="p-6 flex items-center gap-3">
+
+        <!--Logotipo-->
+        <a href="../frontend/index.html" class="flex items-center gap-3 text-primary">
+          <img src="Logo_png.png" alt="Logo" class="h-11 w-auto">
+        </a>
+        <!--Fim Logotipo-->
+      </div>
+
+      <!--Menu Lateral-->
+      <nav class="flex-1 px-4 py-4 space-y-1">
+        <a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-primary/10 hover:text-primary rounded-xl transition-colors"
+          href="code_produto_.html">
+          <span class="material-symbols-outlined">lunch_dining</span>
+          <span class="text-sm font-medium">Produtos</span>
+        </a>
+
+
+        <a class="flex items-center gap-3 px-3 py-2.5 active-nav rounded-xl transition-colors">
+          <span class="material-symbols-outlined">group</span>
+          <span class="text-sm font-medium">Grupo de Clientes (beta)</span>
+        </a>
+
+      </nav>
+      <!--Menu Lateral-->
+
+      <!--Conta do Admin-->
+      <div class="p-4 border-t border-slate-100 dark:border-slate-800">
+        <div class="flex items-center gap-3 p-2 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+
+          <div class="size-8 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined text-sm">person</span>
+          </div>
+
+          <div class="flex-1 overflow-hidden">
+            <p id="adminNome" class="text-xs font-bold truncate">Carregando...</p>
+            <p id="adminCargo" class="text-[10px] text-slate-500">...</p>
+          </div>
+
+          <!-- BOTÃO LOGOUT -->
+          <button onclick="logout()" class="text-slate-400 hover:text-red-500 transition-colors">
+            <span class="material-symbols-outlined text-sm">logout</span>
+          </button>
+
+        </div>
+      </div>
+      <!--Fim da Conta do Admin-->
+    </aside>
+    <main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark">
+      <header
+        class="sticky top-0 z-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-8 py-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+
+            <!--TITULO-->
+            <h2 class="text-2xl font-bold tracking-tight">Grupo de Clientes (beta)</h2>
+            <div class="hidden md:flex bg-slate-100 dark:bg-slate-800 rounded-full px-3 py-1 items-center gap-2">
+            </div>
+          </div>
+          <!--Fim Titulo-->
+
+      </header>
+
+      <main class="min-h-screen flex flex-col items-center justify-center p-8 bg-surface">
+        <!-- Center Container -->
+        <div class="w-full max-w-2xl animate-fade-in">
+          <!-- Header Section -->
+          <header class="mb-10 text-center">
+            <h1 class="text-3xl font-extrabold text-on-surface tracking-tight font-headline mb-2">Criar Grupo de
+              Clientes</h1>
+            <p class="text-on-secondary-container font-body">Adicione clientes pelo CPF para aplicar descontos
+              exclusivos</p>
+          </header>
+          <!-- Form Card -->
+          <div class="bg-surface-container-lowest rounded-2xl p-8 shadow-[0_12px_40px_rgba(90,65,56,0.06)] border-none">
+            <form id="formGrupo" class="space-y-8">
+
+              <!-- Nome + Desconto -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div class="space-y-2">
+                  <label class="block text-xs font-bold">Nome do Grupo</label>
+                  <input id="nomeGrupo" type="text" class="w-full h-12 px-4 rounded-xl bg-slate-100 outline-none"
+                    placeholder="e.g. VIP Members" />
+                </div>
+
+                <div class="space-y-2">
+                  <label class="block text-xs font-bold">Desconto (%)</label>
+                  <input id="descontoGrupo" type="number" class="w-full h-12 px-4 rounded-xl bg-slate-100 outline-none"
+                    placeholder="15" />
+                </div>
+
+              </div>
+
+              <!-- CPF -->
+              <div class="space-y-4">
+                <label class="block text-xs font-bold">Cpf</label>
+                <div class="flex gap-3">
+
+                  <input id="inputCPF" type="text" class="w-full h-12 px-4 rounded-xl bg-slate-100 outline-none"
+                    placeholder="00000000000" />
+
+                  <button type="button" onclick="adicionarCPF()"
+                    class="h-12 px-6 bg-primary text-white rounded-xl font-bold">
+                    Adicionar
+                  </button>
+                </div>
+
+                <!-- LISTA DINÂMICA -->
+                <div id="listaCPF" class="flex flex-wrap gap-2"></div>
+
+              </div>
+
+              <!-- BOTÕES -->
+              <div class="flex gap-4 pt-4">
+                <button type="submit" class="flex-1 h-14 bg-primary text-white rounded-xl font-bold">
+                  Salvar Grupo
+                </button>
+
+                <button type="button" class="flex-1 h-14 bg-gray-200 rounded-xl font-bold">
+                  Cancelar
+                </button>
+              </div>
+
+            </form>
+          </div>
+          <!-- Visual Decoration (Soft Blobs for high-end feel) -->
+          <div class="fixed -bottom-24 -right-24 w-96 h-96 bg-primary/5 rounded-full blur-[100px] -z-10"></div>
+          <div class="fixed -top-24 -left-24 w-96 h-96 bg-primary/5 rounded-full blur-[100px] -z-10"></div>
+        </div>
+      </main>
+</body>
+<script>
+
+  let cpfs = [];
+
+  // Adicionar CPF
+  function adicionarCPF() {
+    const input = document.getElementById("inputCPF");
+    let cpf = input.value.replace(/\D/g, "");
+
+    if (cpf.length !== 11) {
+      alert("CPF inválido");
+      return;
+    }
+
+    if (cpfs.includes(cpf)) {
+      alert("CPF já adicionado");
+      return;
+    }
+
+    cpfs.push(cpf);
+    input.value = "";
+    renderizarCPFs();
+  }
+
+  // Renderizar lista
+  function renderizarCPFs() {
+    const container = document.getElementById("listaCPF");
+
+    container.innerHTML = cpfs.map((cpf, index) => `
+    <div class="flex items-center gap-2 px-3 py-1.5 bg-primary text-white rounded-full text-sm">
+      ${cpf}
+      <button onclick="removerCPF(${index})">
+        ✕
+      </button>
+    </div>
+  `).join("");
+  }
+
+  // Remover CPF
+  function removerCPF(index) {
+    cpfs.splice(index, 1);
+    renderizarCPFs();
+  }
+
+  // Salvar grupo
+  document.getElementById("formGrupo").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const nome = document.getElementById("nomeGrupo").value;
+    const desconto = document.getElementById("descontoGrupo").value;
+
+    if (!nome || !desconto || cpfs.length === 0) {
+      alert("Preencha todos os campos");
+      return;
+    }
+
+    const dados = {
+      nome,
+      desconto: parseFloat(desconto),
+      cpfs
+    };
+
+    const response = await fetch("/criar-grupo", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(dados)
+    });
+
+    if (response.ok) {
+      alert("Grupo criado com sucesso!");
+      cpfs = [];
+      renderizarCPFs();
+      document.getElementById("formGrupo").reset();
+    } else {
+      alert("Erro ao criar grupo");
+    }
+  });
+
+  // Logout
+  function logout() {
+    localStorage.removeItem("usuario");
+    localStorage.removeItem("carrinho");
+    window.location.href = "../frontend/index.html";
+  }
+
+  // Carregar dados do admin do localStorage
+  function carregarAdmin() {
+    const usuarioRaw = localStorage.getItem("usuario");
+    if (!usuarioRaw) {
+      window.location.href = "../frontend/Auth/signIn.html";
+      return;
+    }
+    const usuario = JSON.parse(usuarioRaw);
+    document.getElementById("adminNome").textContent = usuario.pk_cpf_usuario || "Admin";
+    document.getElementById("adminCargo").textContent = "Administrador";
+  }
+
+  carregarAdmin();
+</script>

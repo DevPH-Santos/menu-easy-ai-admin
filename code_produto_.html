@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-br">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Cadastrar Produtos - Menu EasyAI</title>
+  <link rel="shortcut icon" href="icon-hamburguer.ico" type="image/x-icon">
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#ec5b13",
+            "background-light": "#f8f6f6",
+            "background-dark": "#221610",
+          },
+          fontFamily: {
+            "display": ["Public Sans"]
+          },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .active-nav {
+      background-color: #ec5b13;
+      color: white !important;
+    }
+  </style>
+</head>
+
+<body
+  class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased overflow-x-hidden">
+  <div class="flex h-screen overflow-hidden">
+    <aside
+      class="w-64 flex-shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col">
+      <div class="p-6 flex items-center gap-3">
+
+        <!--Logotipo-->
+        <a href="../frontend/index.html" class="flex items-center gap-3 text-primary">
+          <img src="Logo_png.png" alt="Logo" class="h-11 w-auto">
+        </a>
+        <!--Fim Logotipo-->
+      </div>
+
+      <!--Menu Lateral-->
+      <nav class="flex-1 px-4 py-4 space-y-1">
+        <a class="flex items-center gap-3 px-3 py-2.5 active-nav rounded-xl transition-colors" href="#">
+          <span class="material-symbols-outlined">lunch_dining</span>
+          <span class="text-sm font-medium">Produtos</span>
+        </a>
+
+
+        <a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-primary/10 hover:text-primary rounded-xl transition-colors"
+          href="conectar_conta.html">
+          <span class="material-symbols-outlined">group</span>
+          <span class="text-sm font-medium">Grupo de Clientes (beta)</span>
+        </a>
+
+      </nav>
+      <!--Menu Lateral-->
+
+      <!--Conta do Admin-->
+      <div class="p-4 border-t border-slate-100 dark:border-slate-800">
+        <div class="flex items-center gap-3 p-2 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+
+          <div class="size-8 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined text-sm">person</span>
+          </div>
+
+          <div class="flex-1 overflow-hidden">
+            <p id="adminNome" class="text-xs font-bold truncate">Carregando...</p>
+            <p id="adminCargo" class="text-[10px] text-slate-500">...</p>
+          </div>
+
+          <!-- BOTÃO LOGOUT -->
+          <button onclick="logout()" class="text-slate-400 hover:text-red-500 transition-colors">
+            <span class="material-symbols-outlined text-sm">logout</span>
+          </button>
+
+        </div>
+      </div>
+      <!--Fim da Conta do Admin-->
+
+    </aside>
+    <main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark">
+      <header
+        class="sticky top-0 z-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-8 py-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+
+            <!--TITULO-->
+            <h2 class="text-2xl font-bold tracking-tight">Gerenciador de Produtos</h2>
+            <div class="hidden md:flex bg-slate-100 dark:bg-slate-800 rounded-full px-3 py-1 items-center gap-2">
+            </div>
+          </div>
+          <!--Fim Titulo-->
+
+          <!--Pesquisar Produtos--> <!--CONECTAR COM O BANCO DE DADOS-->
+          <div class="flex items-center gap-4">
+            <div class="relative hidden sm:block">
+              <span
+                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+
+              <input id="searchInput"
+                class="pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/50 w-64 transition-all"
+                placeholder="Procurar Produtos..." type="text" />
+            </div>
+          </div>
+
+          <!-- Resultado -->
+          <div id="resultados" class="mt-4"></div>
+          <!--Fim Pesquisar Produtos-->
+
+          <!--Botão adicionar produto-->
+          <button
+            class="bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition-transform active:scale-95 shadow-lg shadow-primary/20"
+            onclick="document.getElementById('add-product-modal').classList.remove('hidden')">
+            <span class="material-symbols-outlined">add</span>
+            <span>Adicionar Produto</span>
+          </button>
+        </div>
+      </header>
+      <!--Botão adicionar produto-->
+
+      <!--Botão de Categorias--> <!--CONECTAR COM O BANCO DE DADOS-->
+      <div class="p-8">
+        <div class="flex gap-4 mb-8">
+
+          <button onclick="filtrarCategoria('todos', this)"
+            class="btn-cat px-4 py-2 rounded-full bg-primary text-white text-sm font-bold transition-all duration-200">
+            Todos os Produtos
+          </button>
+
+          <button onclick="filtrarCategoria('Prato principal', this)"
+            class="btn-cat px-4 py-2 rounded-full bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-semibold border border-slate-200 dark:border-slate-700 hover:border-primary transition-all duration-200">
+            Prato principal
+          </button>
+
+          <button onclick="filtrarCategoria('Aperitivos', this)"
+            class="btn-cat px-4 py-2 rounded-full bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-semibold border border-slate-200 dark:border-slate-700 hover:border-primary transition-all duration-200">
+            Aperitivos
+          </button>
+
+          <button onclick="filtrarCategoria('Sobremesas', this)"
+            class="btn-cat px-4 py-2 rounded-full bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-semibold border border-slate-200 dark:border-slate-700 hover:border-primary transition-all duration-200">
+            Sobremesas
+          </button>
+
+          <button onclick="filtrarCategoria('Bebidas', this)"
+            class="btn-cat px-4 py-2 rounded-full bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-semibold border border-slate-200 dark:border-slate-700 hover:border-primary transition-all duration-200">
+            Bebidas
+          </button>
+
+        </div>
+        <div
+          class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Item</th>
+                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Categoria</th>
+                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Preço</th>
+                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Status</th>
+                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-right">Ações</th>
+              </tr>
+            </thead>
+            <!--Fim do Bloco de Produtos-->
+
+            <tbody id="listaProdutos" class="divide-y divide-slate-100 dark:divide-slate-800">
+              <!-- Produtos serão carregados aqui -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+  </div>
+  <!--Fim do Bloco de Produtos-->
+
+  <!--Janela modal--> <!--Adaptar ao banco e adicionar as funções-->
+  <div class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
+    id="add-product-modal">
+    <div
+      class="bg-white dark:bg-slate-900 rounded-[2rem] shadow-2xl w-3xs max-w-none max-h-[90vh] overflow-hidden flex flex-col border border-slate-200 dark:border-slate-800">
+
+      <!-- HEADER -->
+      <div
+        class="px-8 py-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/20">
+        <div class="flex items-center gap-3">
+          <div class="size-10 rounded-full bg-primary/20 text-primary flex items-center justify-center">
+            <span class="material-symbols-outlined">restaurant</span>
+          </div>
+          <h3 class="text-xl font-black">Adicionar Produto</h3>
+        </div>
+        <button type="button" onclick="fecharModal()"
+          class="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
+          <span class="material-symbols-outlined text-3xl">close</span>
+        </button>
+      </div>
+
+      <!-- BODY -->
+      <div class="flex-1 overflow-y-auto p-8">
+        <form id="formProduto" class="space-y-6">
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- ESQUERDA -->
+            <div class="space-y-5">
+
+              <div>
+                <label class="block text-sm font-bold mb-2">Nome do Produto</label>
+                <input name="nome_prod" required type="text"
+                  class="w-full bg-slate-50 dark:bg-slate-800/50 rounded-xl px-4 py-3 text-sm" />
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-bold mb-2">Preço (R$)</label>
+                  <input name="preco_prod" required step="0.01" type="number"
+                    class="w-full bg-slate-50 dark:bg-slate-800/50 rounded-xl px-4 py-3 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-sm font-bold mb-2">% Lucro</label>
+                  <input name="prod_lucro_porcent" required step="0.01" type="number"
+                    class="w-full bg-slate-50 dark:bg-slate-800/50 rounded-xl px-4 py-3 text-sm" />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm font-bold mb-2">Descrição</label>
+                <textarea name="descricao_prod"
+                  class="w-full bg-slate-50 dark:bg-slate-800/50 rounded-xl px-4 py-3 text-sm" rows="3"></textarea>
+              </div>
+
+              <div>
+                <label class="block text-sm font-bold mb-2">Foto do Produto</label>
+                <input id="inputImagem" type="file" accept="image/*"
+                  class="w-full bg-slate-50 dark:bg-slate-800/50 rounded-xl px-4 py-3 text-sm" />
+                <input name="img_prod" type="hidden" />
+                <p id="imgStatus" class="text-xs text-slate-400 mt-1"></p>
+                <img id="previewImagem" src="" alt="" class="hidden mt-3 w-full h-40 object-cover rounded-xl" />
+              </div>
+
+            </div>
+
+            <!-- DIREITA -->
+            <div class="space-y-5">
+
+              <div>
+                <label class="block text-sm font-bold mb-2">Coluna do Cardápio</label>
+                <select name="coluna_prod" required
+                  class="w-full bg-slate-50 dark:bg-slate-800/50 rounded-xl px-4 py-3 text-sm">
+                  <option value="">Selecione...</option>
+                  <option value="lanche">🍔 Lanches</option>
+                  <option value="porcoes">🍟 Porções</option>
+                  <option value="massa">🍕 Pizzas</option>
+                  <option value="pratos">🍽️ Pratos</option>
+                  <option value="bebida">🥤 Bebidas</option>
+                  <option value="sobremesa">🍦 Sobremesas</option>
+                  <option value="sorvete">🍨 Sorvetes</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-bold mb-2">Características</label>
+                <div id="listaCaracteristicas"
+                  class="bg-slate-50 dark:bg-slate-800/50 rounded-xl px-4 py-3 max-h-52 overflow-y-auto space-y-2 text-sm">
+                  <p class="text-slate-400">Carregando...</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- FOOTER JANELA MODAL -->
+      <div class="px-8 py-6 bg-slate-50 dark:bg-slate-800/50 flex justify-end gap-4">
+        <button type="button" onclick="fecharModal()"
+          class="px-6 py-2.5 rounded-xl font-bold text-sm text-slate-500 hover:text-slate-900 transition-colors">
+          Descartar
+        </button>
+
+        <button onclick="salvarProduto()"
+          class="bg-primary hover:bg-primary/90 text-white px-8 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 transition-transform active:scale-95">
+          Salvar Produto
+        </button>
+      </div>
+
+    </div>
+  </div>
+  <!--Fim da Janela modal-->
+
+  </div>
+</body>
+<script>
+
+  // Converte caminho salvo no banco (./public/...) para caminho relativo ao admin (../frontend/public/...)
+  function resolverCaminhoImagem(img) {
+    if (!img) return 'https://via.placeholder.com/150';
+    if (img.startsWith('./')) return '../frontend/' + img.substring(2);
+    return img;
+  }
+
+  // Fechar modal
+  function fecharModal() {
+    const modal = document.getElementById('add-product-modal');
+    modal.classList.add('hidden');
+    modal.querySelector('h3').textContent = 'Adicionar Produto';
+    document.getElementById('formProduto').reset();
+    document.getElementById('inputImagem').value = '';
+    document.getElementById('imgStatus').textContent = '';
+    document.getElementById('previewImagem').classList.add('hidden');
+    window.produtoEditando = null;
+  }
+
+  // Upload de imagem ao selecionar arquivo
+  document.getElementById('inputImagem').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const status = document.getElementById('imgStatus');
+    const preview = document.getElementById('previewImagem');
+    status.textContent = 'Enviando...';
+    const formData = new FormData();
+    formData.append('imagem', file);
+    try {
+      const res = await fetch('http://localhost:3000/api/produtos/upload', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.erro || 'Erro no upload');
+      document.querySelector('[name="img_prod"]').value = data.path;
+      preview.src = '../frontend/' + data.path.substring(2); // ./public/... → ../frontend/public/...
+      preview.classList.remove('hidden');
+      status.textContent = 'Imagem salva: ' + file.name;
+      status.style.color = '#16a34a';
+    } catch (err) {
+      status.textContent = 'Erro ao enviar imagem: ' + err.message;
+      status.style.color = '#dc2626';
+    }
+  });
+
+  // Carregar características do banco
+  async function carregarCaracteristicas() {
+    try {
+      const res = await fetch('http://localhost:3000/api/produtos/caracteristicas');
+      const lista = await res.json();
+      const container = document.getElementById('listaCaracteristicas');
+      container.innerHTML = lista.map(c => `
+        <label class="flex items-center gap-2 cursor-pointer hover:text-primary">
+          <input type="checkbox" name="caracteristicas" value="${c.pk_id_caracteristica}"
+            class="accent-primary w-4 h-4" />
+          ${c.nome_caracteristica}
+        </label>
+      `).join('');
+    } catch (e) {
+      document.getElementById('listaCaracteristicas').innerHTML = '<p class="text-red-400 text-xs">Erro ao carregar características</p>';
+    }
+  }
+
+  // Abrir modal já carregando características
+  document.querySelector('button[onclick*="add-product-modal"]').addEventListener('click', () => {
+    carregarCaracteristicas();
+  });
+
+  // Lista global para busca e filtro
+  window.todosProdutos = [];
+
+  // Pesquisar Produtos (filtra da lista já carregada)
+  const input = document.getElementById("searchInput");
+  input.addEventListener("input", () => {
+    const termo = input.value.toLowerCase().trim();
+    const filtrados = termo.length < 1
+      ? window.todosProdutos
+      : window.todosProdutos.filter(p => p.nome_prod.toLowerCase().includes(termo));
+    renderizarTabela(filtrados);
+  });
+
+  function renderizarTabela(produtos) {
+    const tabela = document.getElementById("listaProdutos");
+    if (produtos.length === 0) {
+      tabela.innerHTML = `<tr><td colspan="5" class="px-6 py-8 text-center text-slate-400">Nenhum produto encontrado.</td></tr>`;
+      return;
+    }
+    tabela.innerHTML = produtos.map(p => `
+    <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+      <td class="px-6 py-4">
+        <div class="flex items-center gap-4">
+          <div class="size-14 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
+            <img class="w-full h-full object-cover" src="${resolverCaminhoImagem(p.img_prod)}"
+              onerror="this.src='https://via.placeholder.com/150'"/>
+          </div>
+          <div>
+            <p class="font-bold text-slate-900 dark:text-slate-100">${p.nome_prod}</p>
+            <p class="text-xs text-slate-500 line-clamp-1">${p.descricao_prod || ""}</p>
+          </div>
+        </div>
+      </td>
+      <td class="px-6 py-4 text-sm font-medium text-slate-600">Produto</td>
+      <td class="px-6 py-4 text-sm font-bold">
+        R$ ${parseFloat(p.preco_prod).toFixed(2)}
+      </td>
+      <td class="px-6 py-4">
+        <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wide bg-green-100 text-green-700">
+          Ativo
+        </span>
+      </td>
+      <td class="px-6 py-4 text-right">
+        <div class="flex justify-end gap-2">
+          <button onclick='editarProduto(${JSON.stringify(p)})'
+            class="p-2 text-slate-400 hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-lg">edit</span>
+          </button>
+          <button onclick="deletarProduto(${p.pk_id_prod})"
+            class="p-2 text-slate-400 hover:text-red-500 transition-colors">
+            <span class="material-symbols-outlined text-lg">delete</span>
+          </button>
+        </div>
+      </td>
+    </tr>
+  `).join("");
+  }
+
+  async function carregarProdutos() {
+    const res = await fetch("http://localhost:3000/api/produtos");
+    const produtos = await res.json();
+    window.todosProdutos = produtos;
+    renderizarTabela(produtos);
+  }
+
+  // Mapa característica → coluna do cardápio (inverso de COLUNA_PARA_CARACTERISTICA)
+  const CARACTERISTICA_PARA_COLUNA = {
+    lanche: 'lanche',
+    entrada: 'porcoes',
+    massa: 'massa',
+    prato_principal: 'pratos',
+    bebida: 'bebida',
+    sobremesa: 'sobremesa'
+  };
+
+  // EDITAR
+  async function editarProduto(produto) {
+    const modal = document.getElementById("add-product-modal");
+    modal.querySelector('h3').textContent = 'Editar Produto';
+    modal.classList.remove("hidden");
+
+    await carregarCaracteristicas();
+
+    document.querySelector("[name='nome_prod']").value = produto.nome_prod || '';
+    document.querySelector("[name='descricao_prod']").value = produto.descricao_prod || '';
+    document.querySelector("[name='preco_prod']").value = produto.preco_prod || '';
+    document.querySelector("[name='prod_lucro_porcent']").value = produto.prod_lucro_porcent || '';
+
+    document.querySelector("[name='img_prod']").value = produto.img_prod || '';
+    document.getElementById('inputImagem').value = '';
+    document.getElementById('imgStatus').textContent = '';
+    if (produto.img_prod) {
+      const preview = document.getElementById('previewImagem');
+      preview.src = resolverCaminhoImagem(produto.img_prod);
+      preview.classList.remove('hidden');
+    }
+
+    // Buscar características do produto e pré-marcar checkboxes
+    try {
+      const res = await fetch(`http://localhost:3000/api/produtos/${produto.pk_id_prod}/caracteristicas`);
+      const caracteristicas = await res.json();
+      const ids = caracteristicas.map(c => String(c.pk_id_caracteristica));
+      document.querySelectorAll('input[name="caracteristicas"]').forEach(cb => {
+        cb.checked = ids.includes(cb.value);
+      });
+
+      // Pré-selecionar coluna do cardápio com base nas características
+      const nomes = caracteristicas.map(c => c.nome_caracteristica);
+      const colunaSelect = document.querySelector("[name='coluna_prod']");
+      for (const nome of nomes) {
+        if (CARACTERISTICA_PARA_COLUNA[nome]) {
+          colunaSelect.value = CARACTERISTICA_PARA_COLUNA[nome];
+          break;
+        }
+      }
+    } catch (e) {
+      console.warn('Erro ao buscar características do produto:', e);
+    }
+
+    window.produtoEditando = produto.pk_id_prod;
+  }
+
+  // DELETAR
+  async function deletarProduto(id) {
+    if (!confirm("Deseja realmente excluir?")) return;
+
+    await fetch(`http://localhost:3000/api/produtos/${id}`, {
+      method: "DELETE"
+    });
+
+    carregarProdutos();
+  }
+
+  // Mapa coluna → nome da característica no banco
+  const COLUNA_PARA_CARACTERISTICA = {
+    lanche: 'lanche',
+    porcoes: 'entrada',
+    massa: 'massa',
+    pratos: 'prato_principal',
+    bebida: 'bebida',
+    sobremesa: 'sobremesa',
+    sorvete: 'sobremesa'
+  };
+
+  // SALVAR (CREATE ou UPDATE)
+  async function salvarProduto() {
+    const form = document.getElementById("formProduto");
+    const dados = new FormData(form);
+
+    // Coletar características marcadas
+    const caracteristicasSelecionadas = [...form.querySelectorAll('input[name="caracteristicas"]:checked')]
+      .map(cb => parseInt(cb.value));
+
+    const coluna = dados.get("coluna_prod");
+
+    // Adicionar a característica da coluna do cardápio se não estiver marcada
+    if (coluna && COLUNA_PARA_CARACTERISTICA[coluna]) {
+      const nomeColuna = COLUNA_PARA_CARACTERISTICA[coluna];
+      const allCaracteristicas = [...form.querySelectorAll('input[name="caracteristicas"]')];
+      const cbColuna = allCaracteristicas.find(cb => {
+        const label = cb.closest('label');
+        return label && label.textContent.trim().toLowerCase() === nomeColuna;
+      });
+      if (cbColuna) {
+        const idColuna = parseInt(cbColuna.value);
+        if (!caracteristicasSelecionadas.includes(idColuna)) {
+          caracteristicasSelecionadas.push(idColuna);
+        }
+      }
+    }
+
+    const produto = {
+      nome_prod: dados.get("nome_prod"),
+      descricao_prod: dados.get("descricao_prod"),
+      preco_prod: parseFloat(dados.get("preco_prod")),
+      prod_lucro_porcent: parseFloat(dados.get("prod_lucro_porcent")),
+      img_prod: dados.get("img_prod") || '',
+      caracteristicas: caracteristicasSelecionadas
+    };
+
+    if (!produto.nome_prod || !produto.preco_prod || !coluna) {
+      alert("Preencha nome, preço e coluna do cardápio.");
+      return;
+    }
+
+    let url = "http://localhost:3000/api/produtos";
+    let method = "POST";
+
+    if (window.produtoEditando) {
+      url = `http://localhost:3000/api/produtos/${window.produtoEditando}`;
+      method = "PUT";
+    }
+
+    const response = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(produto)
+    });
+
+    if (!response.ok) {
+      alert("Erro ao salvar produto");
+      return;
+    }
+
+    fecharModal();
+    carregarProdutos();
+  }
+
+  function colunaParaSecao(coluna) {
+    const mapa = {
+      lanche: 'lanches',
+      porcoes: 'porcoes',
+      massa: 'pizzas',
+      pratos: 'pratos',
+      bebida: 'bebidas',
+      sobremesa: 'sobremesas',
+      sorvete: 'sorvetes'
+    };
+    return mapa[coluna] || 'lanches';
+  }
+
+  // carregar ao abrir
+  carregarProdutos();
+
+  async function carregarAdmin() {
+    try {
+      const response = await fetch("/admin/me"); // rota do backend
+      const admin = await response.json();
+
+      document.getElementById("adminNome").textContent = admin.nome;
+      document.getElementById("adminCargo").textContent = admin.cargo;
+
+    } catch (error) {
+      console.error("Erro ao carregar admin:", error);
+    }
+  }
+
+  // Logout
+  function logout() {
+    localStorage.removeItem("usuario");
+    localStorage.removeItem("carrinho");
+    window.location.href = "../frontend/index.html";
+  }
+
+  // Carregar dados do admin do localStorage
+  function carregarAdmin() {
+    const usuarioRaw = localStorage.getItem("usuario");
+    if (!usuarioRaw) {
+      window.location.href = "../frontend/Auth/signIn.html";
+      return;
+    }
+    const usuario = JSON.parse(usuarioRaw);
+    document.getElementById("adminNome").textContent = usuario.pk_cpf_usuario || "Admin";
+    document.getElementById("adminCargo").textContent = "Administrador";
+  }
+
+  // Executa ao abrir a página
+  carregarAdmin();
+
+  // Função para trocar estilo do botão ativo
+  function ativarBotao(botaoClicado) {
+    document.querySelectorAll(".btn-cat").forEach(btn => {
+
+      // REMOVE TODAS as cores possíveis
+      btn.classList.remove(
+        "bg-primary",
+        "text-white",
+        "bg-white",
+        "text-slate-600",
+        "dark:bg-slate-800",
+        "dark:text-slate-300"
+      );
+
+      // ESTILO PADRÃO (não selecionado)
+      btn.classList.add(
+        "bg-white",
+        "text-slate-600",
+        "dark:bg-slate-800",
+        "dark:text-slate-300"
+      );
+    });
+
+    // BOTÃO ATIVO
+    botaoClicado.classList.remove(
+      "bg-white",
+      "text-slate-600",
+      "dark:bg-slate-800",
+      "dark:text-slate-300"
+    );
+
+    botaoClicado.classList.add("bg-primary", "text-white");
+  }
+
+  // Mapa de label → nome da característica no banco
+  const CATEGORIA_MAPA = {
+    'Prato principal': 'prato_principal',
+    'Aperitivos': 'entrada',
+    'Sobremesas': 'sobremesa',
+    'Bebidas': 'bebida'
+  };
+
+  async function filtrarCategoria(categoria, botaoClicado) {
+    if (botaoClicado) ativarBotao(botaoClicado);
+
+    if (categoria === 'todos') {
+      renderizarTabela(window.todosProdutos);
+      return;
+    }
+
+    const nomeCaracteristica = CATEGORIA_MAPA[categoria];
+    if (!nomeCaracteristica) return;
+
+    const res = await fetch(`http://localhost:3000/api/produtos/caracteristica/${nomeCaracteristica}`);
+    const produtos = await res.json();
+    renderizarTabela(produtos);
+  }
+</script>
+
+</html>
