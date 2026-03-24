@@ -267,14 +267,14 @@
   function logout() {
     localStorage.removeItem("usuario");
     localStorage.removeItem("carrinho");
-    window.location.href = "../frontend/index.html";
+    window.location.href = "https://cardapio-menu.netlify.app/index.html";
   }
 
   // Carregar dados do admin do localStorage
   function carregarAdmin() {
     const usuarioRaw = localStorage.getItem("usuario");
     if (!usuarioRaw) {
-      window.location.href = "../frontend/Auth/signIn.html";
+      window.location.href = "https://cardapio-menu.netlify.app/auth/signin";
       return;
     }
     const usuario = JSON.parse(usuarioRaw);

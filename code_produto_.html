@@ -311,6 +311,8 @@
 </body>
 <script>
 
+  const API = "https://menu-easy-ai-backend.onrender.com";
+
   // Converte caminho salvo no banco (./public/...) para caminho relativo ao admin (../frontend/public/...)
   function resolverCaminhoImagem(img) {
     if (!img) return 'https://via.placeholder.com/150';
@@ -340,7 +342,7 @@
     const formData = new FormData();
     formData.append('imagem', file);
     try {
-      const res = await fetch('http://localhost:3000/api/produtos/upload', {
+      const res = await fetch(`${API}/api/produtos/upload`, {
         method: 'POST',
         body: formData
       });
@@ -360,7 +362,7 @@
   // Carregar características do banco
   async function carregarCaracteristicas() {
     try {
-      const res = await fetch('http://localhost:3000/api/produtos/caracteristicas');
+      const res = await fetch(`${API}/api/produtos/caracteristicas`);
       const lista = await res.json();
       const container = document.getElementById('listaCaracteristicas');
       container.innerHTML = lista.map(c => `
@@ -439,7 +441,7 @@
   }
 
   async function carregarProdutos() {
-    const res = await fetch("http://localhost:3000/api/produtos");
+    const res = await fetch(`${API}/api/produtos`);
     const produtos = await res.json();
     window.todosProdutos = produtos;
     renderizarTabela(produtos);
@@ -479,7 +481,7 @@
 
     // Buscar características do produto e pré-marcar checkboxes
     try {
-      const res = await fetch(`http://localhost:3000/api/produtos/${produto.pk_id_prod}/caracteristicas`);
+      const res = await fetch(`${API}/api/produtos/${produto.pk_id_prod}/caracteristicas`);
       const caracteristicas = await res.json();
       const ids = caracteristicas.map(c => String(c.pk_id_caracteristica));
       document.querySelectorAll('input[name="caracteristicas"]').forEach(cb => {
@@ -506,7 +508,7 @@
   async function deletarProduto(id) {
     if (!confirm("Deseja realmente excluir?")) return;
 
-    await fetch(`http://localhost:3000/api/produtos/${id}`, {
+    await fetch(`${API}/api/produtos/${id}`, {
       method: "DELETE"
     });
 
@@ -565,11 +567,11 @@
       return;
     }
 
-    let url = "http://localhost:3000/api/produtos";
+    let url = `${API}/api/produtos`;
     let method = "POST";
 
     if (window.produtoEditando) {
-      url = `http://localhost:3000/api/produtos/${window.produtoEditando}`;
+      url = `${API}/api/produtos/${window.produtoEditando}`;
       method = "PUT";
     }
 
@@ -621,14 +623,14 @@
   function logout() {
     localStorage.removeItem("usuario");
     localStorage.removeItem("carrinho");
-    window.location.href = "../frontend/index.html";
+    window.location.href = "https://cardapio-menu.netlify.app/index.html";
   }
 
   // Carregar dados do admin do localStorage
   function carregarAdmin() {
     const usuarioRaw = localStorage.getItem("usuario");
     if (!usuarioRaw) {
-      window.location.href = "../frontend/Auth/signIn.html";
+      window.location.href = "https://cardapio-menu.netlify.app/auth/signin";
       return;
     }
     const usuario = JSON.parse(usuarioRaw);
@@ -692,7 +694,7 @@
     const nomeCaracteristica = CATEGORIA_MAPA[categoria];
     if (!nomeCaracteristica) return;
 
-    const res = await fetch(`http://localhost:3000/api/produtos/caracteristica/${nomeCaracteristica}`);
+    const res = await fetch(`${API}/api/produtos/caracteristica/${nomeCaracteristica}`);
     const produtos = await res.json();
     renderizarTabela(produtos);
   }
