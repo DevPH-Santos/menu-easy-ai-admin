@@ -312,6 +312,7 @@
 <script>
 
   const API = "https://menu-easy-ai-backend.onrender.com";
+  const BASE_URL = "https://cardapio-menu.netlify.app";
 
   // Converte caminho salvo no banco (./public/...) para caminho relativo ao admin (../frontend/public/...)
   function resolverCaminhoImagem(img) {
@@ -349,7 +350,14 @@
       const data = await res.json();
       if (!res.ok) throw new Error(data.erro || 'Erro no upload');
       document.querySelector('[name="img_prod"]').value = data.path;
-      preview.src = '../frontend/' + data.path.substring(2); // ./public/... → ../frontend/public/...
+      
+      // ✅ MUDANÇA: Usa URL do Netlify
+      if (data.path.startsWith('./')) {
+        preview.src = BASE_URL + '/public/' + data.path.substring(2);
+      } else {
+        preview.src = data.path;
+      }
+      
       preview.classList.remove('hidden');
       status.textContent = 'Imagem salva: ' + file.name;
       status.style.color = '#16a34a';
